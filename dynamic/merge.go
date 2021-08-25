@@ -95,6 +95,6 @@ func mergeField(m *Message, fd *desc.FieldDescriptor, val interface{}) error {
 	}
 
 	// no existing message, so just set field
-	m.internalSetField(fd, val)
+	m.FastSetField(fd, val)
 	return nil
 }

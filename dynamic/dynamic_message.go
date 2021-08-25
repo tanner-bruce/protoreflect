@@ -694,11 +694,11 @@ func (m *Message) setField(fd *desc.FieldDescriptor, val interface{}) error {
 	if val, err = validFieldValue(fd, val); err != nil {
 		return err
 	}
-	m.internalSetField(fd, val)
+	m.FastSetField(fd, val)
 	return nil
 }
 
-func (m *Message) internalSetField(fd *desc.FieldDescriptor, val interface{}) {
+func (m *Message) FastSetField(fd *desc.FieldDescriptor, val interface{}) {
 	if fd.IsRepeated() {
 		// Unset fields and zero-length fields are indistinguishable, in both
 		// proto2 and proto3 syntax
@@ -1204,7 +1204,7 @@ func (m *Message) putMapField(fd *desc.FieldDescriptor, key interface{}, val int
 		if mp, err = m.parseUnknownField(fd); err != nil {
 			return err
 		} else if mp == nil {
-			m.internalSetField(fd, map[interface{}]interface{}{ki: vi})
+			m.FastSetField(fd, map[interface{}]interface{}{ki: vi})
 			return nil
 		}
 	}
@@ -1619,7 +1619,7 @@ func (m *Message) addRepeatedField(fd *desc.FieldDescriptor, val interface{}) er
 	}
 	res := sl.([]interface{})
 	res = append(res, val)
-	m.internalSetField(fd, res)
+	m.FastSetField(fd, res)
 	return nil
 }
 
@@ -1792,7 +1792,7 @@ func (m *Message) parseUnknownField(fd *desc.FieldDescriptor) (interface{}, erro
 			v = val
 		}
 	}
-	m.internalSetField(fd, v)
+	m.FastSetField(fd, v)
 	return v, nil
 }
 
